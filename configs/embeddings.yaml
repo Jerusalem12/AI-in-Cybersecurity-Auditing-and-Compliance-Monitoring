@@ -1,0 +1,23 @@
+seed: 42
+k: 3
+model: embeddings
+
+recommend:
+  k_pred: 2
+
+paths:
+  controls: data/raw/controls.csv
+  artifacts: data/raw/artifacts.csv
+  predictions_dir: outputs/predictions/embeddings
+  models_dir: models/embeddings
+  rules: configs/rules.yaml
+
+embeddings:
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+
+rules:
+  enabled: false
+
+feedback:
+  alpha: 0.03
+  beta: 0.01

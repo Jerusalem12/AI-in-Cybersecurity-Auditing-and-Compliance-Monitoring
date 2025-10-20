@@ -1,14 +1,24 @@
 seed: 42
 k: 3
-model: tfidf              # switch to "embeddings" if you add it
+model: tfidf
+
+recommend:
+  k_pred: 2
+
 paths:
   controls: data/raw/controls.csv
   artifacts: data/raw/artifacts.csv
-  predictions_dir: outputs/predictions
+  predictions_dir: outputs/predictions/tfidf
   models_dir: models/tfidf
+  rules: configs/rules.yaml
+
 tfidf:
   ngram_range: [1, 2]
   min_df: 1
+
+rules:
+  enabled: false
+
 feedback:
   alpha: 0.03
   beta: 0.01

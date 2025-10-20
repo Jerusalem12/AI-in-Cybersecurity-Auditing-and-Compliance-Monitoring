@@ -12,6 +12,7 @@ src/crs/dataio.py
 src/crs/feedback.py
 src/crs/metrics.py
 src/crs/oscal.py
+src/crs/postrules.py
 src/crs/utils.py
 src/crs.egg-info/PKG-INFO
 src/crs.egg-info/SOURCES.txt

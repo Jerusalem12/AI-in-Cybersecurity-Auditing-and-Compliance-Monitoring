@@ -10,6 +10,9 @@ Requires-Dist: numpy>=1.24
 Requires-Dist: scikit-learn>=1.3
 Requires-Dist: pyyaml>=6.0
 Requires-Dist: matplotlib>=3.7
+Provides-Extra: embeddings
+Requires-Dist: sentence-transformers>=2.6; extra == "embeddings"
+Requires-Dist: torch>=2.2; extra == "embeddings"
 Dynamic: license-file
 
 # Compliance Recommendation System (CRS)

@@ -15,13 +15,13 @@ def main():
     pred_path = args.pred or (Path(cfg["paths"]["predictions_dir"]) / "test.csv")
     df = pd.read_csv(pred_path)
 
-    k_list = cfg.get("k_list", [1,3])
+    k_list = cfg.get("k_list", [3])
     rows=[]
+    rows.append({"metric": "top1_accuracy", "value": top1_accuracy(df)})
     for k in k_list:
         rows.append({"metric": f"precision@{k}", "value": precision_at_k(df, k=k)})
         rows.append({"metric": f"recall@{k}", "value": recall_at_k(df, k=k)})
         rows.append({"metric": f"jaccard@{k}", "value": jaccard(df, k=k)})
-    rows.append({"metric": "top1_accuracy", "value": top1_accuracy(df)})
 
     if args.feedback_csv and Path(args.feedback_csv).exists():
         fb = pd.read_csv(args.feedback_csv)

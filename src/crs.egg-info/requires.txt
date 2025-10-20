@@ -3,3 +3,7 @@ numpy>=1.24
 scikit-learn>=1.3
 pyyaml>=6.0
 matplotlib>=3.7
+
+[embeddings]
+sentence-transformers>=2.6
+torch>=2.2
