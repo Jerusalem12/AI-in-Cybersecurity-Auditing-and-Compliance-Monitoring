@@ -1,0 +1,14 @@
+seed: 42
+k: 3
+model: tfidf              # switch to "embeddings" if you add it
+paths:
+  controls: data/raw/controls.csv
+  artifacts: data/raw/artifacts.csv
+  predictions_dir: outputs/predictions
+  models_dir: models/tfidf
+tfidf:
+  ngram_range: [1, 2]
+  min_df: 1
+feedback:
+  alpha: 0.03
+  beta: 0.01
