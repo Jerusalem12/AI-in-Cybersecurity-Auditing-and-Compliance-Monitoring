@@ -1,0 +1,241 @@
+artifact_id,text,gold_controls,predicted_topk,scores_topk,postrule_notes,evidence_type
+7,IdP password policy too weak; min length 12; MFA optional for some apps.,IA-5;IA-2,IA-2,0.5941,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+19,SIEM review missed for 7 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6,0.3556;0.3217,"auto_k=2 (etype=ticket, cutoff=7, elbow=7, max_k=2)",ticket
+29,NTP drift 120s on web-02; not synced to authoritative time source.,AU-8,AU-8,0.7128,"+0.10 AU-8 (any:ntp,time drift,time skew,clock drift,unsynced) | auto_k=1 (etype=log, cutoff=7, elbow=1, max_k=3)",log
+30,IDS alert lateral movement from 10.0.2.14 to 10.0.41.7; firewall allows any-any.,SC-7;SI-4,SI-4;AC-17;SC-7,0.4579;0.3558;0.3539,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+36,Code repo org/ops contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;CM-6;CM-2,0.3447;0.3335;0.3031,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+40,S3 bucket ml-data not encrypted at rest; KMS key reuse across apps.,SC-28;SC-12,SC-28,0.5927,"+0.08 SC-28 (any:at rest,s3 bucket,disk encryption,kms,storage encryption) | +0.06 SC-12 (any:kms,key rotation,key reuse,key management) | -0.06 SC-8 (neg:at rest,disk) | auto_k=1 (etype=ticket, cutoff=6, elbow=1, max_k=2)",ticket
+42,IDS alert lateral movement from 10.0.40.21 to 10.0.55.9; firewall allows any-any.,SC-7;SI-4,SI-4;AC-17;SC-7,0.4706;0.3580;0.3459,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+44,File integrity monitoring not deployed on db-01 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.4839,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+45,Code repo org/web contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;CM-6,0.3423;0.3421,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+49,Wireless AP AP-HQ-01 uses default credentials and open SSID Visitor.,AC-18;IA-5,AC-18,0.5794,"auto_k=1 (etype=config, cutoff=8, elbow=1, max_k=2)",config
+52,Wireless AP AP-3F-07 uses default credentials and open SSID GuestNet.,AC-18;IA-5,AC-18,0.5491,"auto_k=1 (etype=log, cutoff=6, elbow=1, max_k=3)",log
+55,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+69,VPN profile OpenVPN allows remote access without MFA for group support.,AC-17;IA-2,AC-17;IA-2,0.4913;0.4853,"auto_k=2 (etype=log, cutoff=10, elbow=2, max_k=3)",log
+78,IdP password policy too weak; min length 12; MFA optional for some apps.,IA-5;IA-2,IA-2,0.5941,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+80,File integrity monitoring not deployed on web-02 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.5214,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+82,Weekly vuln scan skipped on web-03; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3552;0.3166,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=log, cutoff=6, elbow=2, max_k=3)",log
+83,SIEM review missed for 30 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6;IR-5,0.3655;0.3379;0.2833,"auto_k=3 (etype=log, cutoff=8, elbow=4, max_k=3)",log
+85,Weekly vuln scan skipped on app-01; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3553;0.3222,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=config, cutoff=6, elbow=2, max_k=2)",config
+88,Multiple failed logins from 10.3.8.6 to payments; account bob not locked after 7 attempts.,AC-7;AU-6,AC-7,0.6568,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+89,App payments does not emit audit records for authentication events.,AU-2;AU-12,AU-12;AU-3,0.4173;0.3771,"auto_k=2 (etype=log, cutoff=8, elbow=2, max_k=3)",log
+92,App kube-api does not emit audit records for authentication events.,AU-2;AU-12,AU-12;AU-3,0.4597;0.3588,"auto_k=2 (etype=ticket, cutoff=9, elbow=9, max_k=2)",ticket
+96,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+102,Code repo org/payments contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;RA-5,0.3328;0.3012,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+109,Wireless AP AP-3F-07 uses default credentials and open SSID GuestNet.,AC-18;IA-5,AC-18,0.5491,"auto_k=1 (etype=log, cutoff=6, elbow=1, max_k=3)",log
+114,File integrity monitoring not deployed on db-01 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.4839,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+119,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+122,Code repo org/web contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;CM-6,0.3423;0.3421,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+129,SIEM review missed for 14 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6;IR-5,0.3530;0.3189;0.2777,"auto_k=3 (etype=log, cutoff=7, elbow=7, max_k=3)",log
+130,VPN profile GlobalProtect allows remote access without MFA for group vendors.,AC-17;IA-2,AC-17;IA-2,0.5569;0.5020,"auto_k=2 (etype=config, cutoff=10, elbow=2, max_k=2)",config
+132,Baseline hardening not applied on RHEL 9 nodes; CIS controls disabled.,CM-6;CM-2,CM-2;CM-6,0.4271;0.3361,"auto_k=2 (etype=config, cutoff=8, elbow=8, max_k=2)",config
+139,Baseline hardening not applied on RHEL 9 nodes; CIS controls disabled.,CM-6;CM-2,CM-2;CM-6;CM-3,0.4271;0.3361;0.3254,"auto_k=3 (etype=log, cutoff=8, elbow=8, max_k=3)",log
+141,Code repo org/ops contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;CM-6;CM-2,0.3447;0.3335;0.3031,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+144,Incident INC-1121 lacks containment steps; trend not tracked across months.,IR-4;IR-5,IR-4;SI-2,0.3317;0.3246,"auto_k=2 (etype=ticket, cutoff=5, elbow=3, max_k=2)",ticket
+152,Code repo org/ops contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;CM-6,0.3447;0.3335,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+154,Backups not encrypted; last restore test older than 18 months.,CP-9;SC-28,CP-9,0.4604,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+175,Code repo org/payments contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;RA-5,0.3328;0.3012,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+176,IdP password policy too weak; min length 12; MFA optional for some apps.,IA-5;IA-2,IA-2,0.5941,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+180,App billing does not emit audit records for authentication events.,AU-2;AU-12,AU-12;AU-3;AU-2,0.4530;0.3648;0.3003,"auto_k=3 (etype=log, cutoff=8, elbow=8, max_k=3)",log
+185,App kube-api does not emit audit records for authentication events.,AU-2;AU-12,AU-12;AU-3;AU-2,0.4597;0.3588;0.3129,"auto_k=3 (etype=log, cutoff=9, elbow=9, max_k=3)",log
+187,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+201,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+205,File integrity monitoring not deployed on siem-01 fleet; checksum alerts missing.,SI-7;SI-4,SI-7;SI-4,0.4989;0.3766,"auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+207,Asset inventory lacks serverless functions and data stores in GCP.,CM-8,CM-8,0.3229,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=log, cutoff=5, elbow=1, max_k=3)",log
+210,Asset inventory lacks serverless functions and data stores in Azure.,CM-8,CM-8,0.2853,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=ticket, cutoff=3, elbow=1, max_k=2)",ticket
+213,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+215,Code repo org/api contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,CM-6;SI-7,0.2997;0.2949,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+219,IdP password policy too weak; min length 10; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6062,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+228,App portal does not emit audit records for authentication events.,AU-2;AU-12,AU-12;AU-3;AU-2,0.5181;0.4308;0.3469,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+230,Backups not encrypted; last restore test older than 18 months.,CP-9;SC-28,CP-9,0.4604,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+244,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+245,Service account db-admin used interactively; no periodic review or disablement.,AC-2;AC-6,AC-2,0.5267,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+248,Service account db-admin used interactively; no periodic review or disablement.,AC-2;AC-6,AC-2,0.5267,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+252,App kube-api does not emit audit records for authentication events.,AU-2;AU-12,AU-12;AU-3,0.4597;0.3588,"auto_k=2 (etype=ticket, cutoff=9, elbow=9, max_k=2)",ticket
+257,Code repo org/api contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,CM-6;SI-7,0.2997;0.2949,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+260,NTP drift 45s on web-02; not synced to authoritative time source.,AU-8,AU-8,0.7264,"+0.10 AU-8 (any:ntp,time drift,time skew,clock drift,unsynced) | auto_k=1 (etype=ticket, cutoff=9, elbow=1, max_k=2)",ticket
+264,Backups not encrypted; last restore test older than 9 months.,CP-9;SC-28,CP-9,0.4680,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+271,Weekly vuln scan skipped on queue-01; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3392;0.3151,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=log, cutoff=5, elbow=2, max_k=3)",log
+274,File integrity monitoring not deployed on web-02 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.5214,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+275,File integrity monitoring not deployed on web-02 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.5214,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+278,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+281,Service account deploy-bot used interactively; no periodic review or disablement.,AC-2;AC-6,AC-2;SI-3;AC-7,0.3717;0.3373;0.2707,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+288,IdP password policy too weak; min length 10; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6062,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+308,VPN profile AnyConnect allows remote access without MFA for group support.,AC-17;IA-2,IA-2;AC-17,0.4915;0.4849,"auto_k=2 (etype=ticket, cutoff=10, elbow=2, max_k=2)",ticket
+314,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+322,File integrity monitoring not deployed on laptop-22 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.5313,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+333,Incident INC-1205 lacks containment steps; trend not tracked across months.,IR-4;IR-5,SI-2;IR-5;IR-4,0.3466;0.3302;0.3075,"auto_k=3 (etype=log, cutoff=6, elbow=3, max_k=3)",log
+334,Multiple failed logins from 172.16.3.4 to kube-api; account svc-batch not locked after 3 attempts.,AC-7;AU-6,AC-7,0.5879,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=config, cutoff=6, elbow=1, max_k=2)",config
+336,Weekly vuln scan skipped on web-03; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3552;0.3166,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=ticket, cutoff=6, elbow=2, max_k=2)",ticket
+338,SIEM review missed for 30 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6,0.3655;0.3379,"auto_k=2 (etype=config, cutoff=8, elbow=4, max_k=2)",config
+341,Incident INC-1077 lacks containment steps; trend not tracked across months.,IR-4;IR-5,SI-2;IR-5;IR-4,0.3509;0.3390;0.3270,"auto_k=3 (etype=log, cutoff=5, elbow=3, max_k=3)",log
+343,SIEM review missed for 21 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6;IR-5,0.3460;0.3135;0.2798,"auto_k=3 (etype=log, cutoff=7, elbow=7, max_k=3)",log
+347,SIEM review missed for 30 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6;IR-5,0.3655;0.3379;0.2833,"auto_k=3 (etype=log, cutoff=8, elbow=4, max_k=3)",log
+352,Service account svc-batch used interactively; no periodic review or disablement.,AC-2;AC-6,AC-2;AC-7,0.3760;0.2967,"auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+353,Baseline hardening not applied on Windows Server 2019 nodes; CIS controls disabled.,CM-6;CM-2,CM-2;CM-6,0.4131;0.3857,"auto_k=2 (etype=config, cutoff=10, elbow=2, max_k=2)",config
+358,S3 bucket ml-data not encrypted at rest; KMS key reuse across apps.,SC-28;SC-12,SC-28,0.5927,"+0.08 SC-28 (any:at rest,s3 bucket,disk encryption,kms,storage encryption) | +0.06 SC-12 (any:kms,key rotation,key reuse,key management) | -0.06 SC-8 (neg:at rest,disk) | auto_k=1 (etype=config, cutoff=6, elbow=1, max_k=2)",config
+359,S3 bucket dev-artifacts not encrypted at rest; KMS key reuse across apps.,SC-28;SC-12,SC-28;SC-12,0.5242;0.3961,"+0.08 SC-28 (any:at rest,s3 bucket,disk encryption,kms,storage encryption) | +0.06 SC-12 (any:kms,key rotation,key reuse,key management) | -0.06 SC-8 (neg:at rest,disk) | auto_k=2 (etype=config, cutoff=9, elbow=2, max_k=2)",config
+361,TLS disabled on api-gateway; HTTP allowed; weak ciphers TLS_RSA_WITH_3DES_EDE_CBC_SHA.,SC-8;SC-13,SC-8;SC-13,0.3793;0.3057,"-0.10 AU-8 (neg:tls,cipher) | +0.08 SC-8 (any:http , tls,https,in transit,cipher) | auto_k=2 (etype=config, cutoff=4, elbow=3, max_k=2)",config
+366,Code repo org/api contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,CM-6;SI-7;SI-2,0.2997;0.2949;0.2725,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+370,VPN profile OpenVPN allows remote access without MFA for group contractors.,AC-17;IA-2,AC-17;IA-2,0.5139;0.4715,"auto_k=2 (etype=config, cutoff=10, elbow=2, max_k=2)",config
+374,SIEM review missed for 21 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6;IR-5,0.3460;0.3135;0.2798,"auto_k=3 (etype=log, cutoff=7, elbow=7, max_k=3)",log
+375,Backups not encrypted; last restore test older than 18 months.,CP-9;SC-28,CP-9,0.4604,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+380,Asset inventory lacks serverless functions and data stores in Azure.,CM-8,CM-8,0.2853,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=ticket, cutoff=3, elbow=1, max_k=2)",ticket
+383,File integrity monitoring not deployed on laptop-22 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.5313,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+393,TLS disabled on file-server; HTTP allowed; weak ciphers TLS_RSA_WITH_NULL_SHA.,SC-8;SC-13,SC-8;SC-13,0.4032;0.3356,"-0.10 AU-8 (neg:tls,cipher) | +0.08 SC-8 (any:http , tls,https,in transit,cipher) | auto_k=2 (etype=config, cutoff=4, elbow=4, max_k=2)",config
+399,IDS alert lateral movement from 10.0.40.21 to 10.0.41.7; firewall allows any-any.,SC-7;SI-4,SI-4;AC-17,0.4674;0.3573,"auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+401,Missing monthly patching; critical CVEs outstanding on queue-01.,SI-2;RA-5,SI-2,0.5912,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+404,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+408,S3 bucket finance-archive not encrypted at rest; KMS key reuse across apps.,SC-28;SC-12,SC-28,0.5839,"+0.08 SC-28 (any:at rest,s3 bucket,disk encryption,kms,storage encryption) | +0.06 SC-12 (any:kms,key rotation,key reuse,key management) | -0.06 SC-8 (neg:at rest,disk) | auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+415,Weekly vuln scan skipped on queue-01; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3392;0.3151,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=config, cutoff=5, elbow=2, max_k=2)",config
+420,TLS disabled on ingress; HTTP allowed; weak ciphers TLS_RSA_WITH_NULL_SHA.,SC-8;SC-13,SC-8;SC-28,0.3760;0.3110,"-0.10 AU-8 (neg:tls,cipher) | +0.08 SC-8 (any:http , tls,https,in transit,cipher) | auto_k=2 (etype=ticket, cutoff=6, elbow=4, max_k=2)",ticket
+426,S3 bucket finance-archive not encrypted at rest; KMS key reuse across apps.,SC-28;SC-12,SC-28,0.5839,"+0.08 SC-28 (any:at rest,s3 bucket,disk encryption,kms,storage encryption) | +0.06 SC-12 (any:kms,key rotation,key reuse,key management) | -0.06 SC-8 (neg:at rest,disk) | auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+429,Service account db-admin used interactively; no periodic review or disablement.,AC-2;AC-6,AC-2,0.5267,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+431,VPN profile OpenVPN allows remote access without MFA for group contractors.,AC-17;IA-2,AC-17;IA-2,0.5139;0.4715,"auto_k=2 (etype=config, cutoff=10, elbow=2, max_k=2)",config
+441,Baseline hardening not applied on RHEL 9 nodes; CIS controls disabled.,CM-6;CM-2,CM-2;CM-6,0.4271;0.3361,"auto_k=2 (etype=ticket, cutoff=8, elbow=8, max_k=2)",ticket
+446,TLS disabled on api-gateway; HTTP allowed; weak ciphers TLS_RSA_WITH_3DES_EDE_CBC_SHA.,SC-8;SC-13,SC-8;SC-13,0.3793;0.3057,"-0.10 AU-8 (neg:tls,cipher) | +0.08 SC-8 (any:http , tls,https,in transit,cipher) | auto_k=2 (etype=ticket, cutoff=4, elbow=3, max_k=2)",ticket
+447,VPN profile GlobalProtect allows remote access without MFA for group vendors.,AC-17;IA-2,AC-17;IA-2,0.5569;0.5020,"auto_k=2 (etype=log, cutoff=10, elbow=2, max_k=3)",log
+448,File integrity monitoring not deployed on ci-runner-3 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.4485,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+463,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+474,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+493,Weekly vuln scan skipped on cache-01; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3353;0.3269,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=ticket, cutoff=4, elbow=2, max_k=2)",ticket
+497,VPN profile GlobalProtect allows remote access without MFA for group contractors.,AC-17;IA-2,AC-17;IA-2,0.5660;0.4751,"auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+499,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+513,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+515,TLS disabled on admin-portal; HTTP allowed; weak ciphers TLS_RSA_WITH_NULL_SHA.,SC-8;SC-13,SC-8;SC-13;SC-12,0.3792;0.3539;0.2768,"-0.10 AU-8 (neg:tls,cipher) | +0.08 SC-8 (any:http , tls,https,in transit,cipher) | auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+532,IdP password policy too weak; min length 12; MFA optional for some apps.,IA-5;IA-2,IA-2,0.5941,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+534,Baseline hardening not applied on Ubuntu 22.04 nodes; CIS controls disabled.,CM-6;CM-2,CM-2;CM-6;CM-3,0.4260;0.3528;0.3061,"auto_k=3 (etype=log, cutoff=8, elbow=4, max_k=3)",log
+536,TLS disabled on api-gateway; HTTP allowed; weak ciphers TLS_RSA_WITH_NULL_SHA.,SC-8;SC-13,SC-8;SC-28;SC-13,0.3786;0.2920;0.2846,"-0.10 AU-8 (neg:tls,cipher) | +0.08 SC-8 (any:http , tls,https,in transit,cipher) | auto_k=3 (etype=log, cutoff=4, elbow=3, max_k=3)",log
+537,Backups not encrypted; last restore test older than 6 months.,CP-9;SC-28,CP-9,0.4646,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+545,Multiple failed logins from 172.16.3.4 to portal; account svc-app not locked after 7 attempts.,AC-7;AU-6,AC-7,0.6219,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+553,Baseline hardening not applied on RHEL 9 nodes; CIS controls disabled.,CM-6;CM-2,CM-2;CM-6,0.4271;0.3361,"auto_k=2 (etype=ticket, cutoff=8, elbow=8, max_k=2)",ticket
+561,NTP drift 35s on ci-runner-3; not synced to authoritative time source.,AU-8,AU-8,0.6711,"+0.10 AU-8 (any:ntp,time drift,time skew,clock drift,unsynced) | auto_k=1 (etype=log, cutoff=4, elbow=1, max_k=3)",log
+572,Endpoint AV disabled on web-02; malware signatures outdated 30 days.,SI-3,SI-3,0.4713,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+577,Wireless AP AP-DC-04 uses default credentials and open SSID GuestNet.,AC-18;IA-5,AC-18,0.5590,"auto_k=1 (etype=log, cutoff=4, elbow=1, max_k=3)",log
+578,File integrity monitoring not deployed on siem-01 fleet; checksum alerts missing.,SI-7;SI-4,SI-7;SI-4;SI-2,0.4989;0.3766;0.3608,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+581,Wireless AP AP-LAB-12 uses default credentials and open SSID Corp-Open.,AC-18;IA-5,AC-18,0.5887,"auto_k=1 (etype=ticket, cutoff=6, elbow=1, max_k=2)",ticket
+585,Multiple failed logins from 10.2.14.9 to portal; account db-admin not locked after 10 attempts.,AC-7;AU-6,AC-7,0.5982,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=ticket, cutoff=9, elbow=1, max_k=2)",ticket
+589,IdP password policy too weak; min length 10; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6062,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+592,IDS alert lateral movement from 10.0.9.8 to 10.0.30.5; firewall allows any-any.,SC-7;SI-4,SI-4;AC-17;SC-7,0.4598;0.3660;0.3564,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+602,Wireless AP AP-3F-07 uses default credentials and open SSID LobbyNet.,AC-18;IA-5,AC-18,0.5822,"auto_k=1 (etype=config, cutoff=7, elbow=1, max_k=2)",config
+605,Weekly vuln scan skipped on web-03; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3552;0.3166,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=config, cutoff=6, elbow=2, max_k=2)",config
+606,Missing monthly patching; critical CVEs outstanding on app-01.,SI-2;RA-5,SI-2,0.5826,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+616,Audit logs missing source IP and user fields in admin-portal.,AU-3;AU-12,AU-3;AU-12;AU-2,0.4265;0.3970;0.3889,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+627,Code repo org/api contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,CM-6;SI-7;SI-2,0.2997;0.2949;0.2725,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+628,Code repo org/ops contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;CM-6;CM-2,0.3447;0.3335;0.3031,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+634,IdP password policy too weak; min length 10; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6062,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+636,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+638,Audit logs missing source IP and user fields in admin-portal.,AU-3;AU-12,AU-3;AU-12;AU-2,0.4265;0.3970;0.3889,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+641,Missing monthly patching; critical CVEs outstanding on app-01.,SI-2;RA-5,SI-2,0.5826,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+651,Code repo org/payments contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;RA-5,0.3328;0.3012,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+654,Multiple failed logins from 172.16.3.4 to portal; account alice not locked after 7 attempts.,AC-7;AU-6,AC-7,0.6009,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=config, cutoff=9, elbow=1, max_k=2)",config
+662,Asset inventory lacks serverless functions and data stores in AWS.,CM-8,CM-8,0.3002,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=log, cutoff=3, elbow=1, max_k=3)",log
+663,Service account db-admin used interactively; no periodic review or disablement.,AC-2;AC-6,AC-2,0.5267,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+671,Backups not encrypted; last restore test older than 9 months.,CP-9;SC-28,CP-9,0.4680,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+675,Multiple failed logins from 10.2.14.9 to portal; account bob not locked after 3 attempts.,AC-7;AU-6,AC-7,0.6221,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+676,IdP password policy too weak; min length 8; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6003,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+677,Audit logs missing source IP and user fields in file-server.,AU-3;AU-12,AU-3;AU-2,0.4381;0.3910,"auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+681,Multiple failed logins from 172.16.3.4 to billing; account bob not locked after 3 attempts.,AC-7;AU-6,AC-7,0.6450,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+696,Multiple failed logins from 10.2.14.9 to auth-service; account svc-batch not locked after 7 attempts.,AC-7;AU-6,AC-7,0.6437,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=log, cutoff=7, elbow=1, max_k=3)",log
+706,NTP drift 35s on siem-01; not synced to authoritative time source.,AU-8,AU-8,0.6888,"+0.10 AU-8 (any:ntp,time drift,time skew,clock drift,unsynced) | auto_k=1 (etype=config, cutoff=8, elbow=1, max_k=2)",config
+708,Baseline hardening not applied on RHEL 9 nodes; CIS controls disabled.,CM-6;CM-2,CM-2;CM-6,0.4271;0.3361,"auto_k=2 (etype=ticket, cutoff=8, elbow=8, max_k=2)",ticket
+715,SIEM review missed for 14 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6,0.3530;0.3189,"auto_k=2 (etype=config, cutoff=7, elbow=7, max_k=2)",config
+722,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+725,Backups not encrypted; last restore test older than 18 months.,CP-9;SC-28,CP-9,0.4604,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+729,Service account svc-app used interactively; no periodic review or disablement.,AC-2;AC-6,AC-2;AU-12,0.3974;0.3238,"auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+731,SIEM review missed for 7 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6,0.3556;0.3217,"auto_k=2 (etype=config, cutoff=7, elbow=7, max_k=2)",config
+738,Wireless AP AP-LAB-12 uses default credentials and open SSID Visitor.,AC-18;IA-5,AC-18,0.5844,"auto_k=1 (etype=ticket, cutoff=7, elbow=1, max_k=2)",ticket
+740,File integrity monitoring not deployed on web-02 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.5214,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+744,App kube-api does not emit audit records for authentication events.,AU-2;AU-12,AU-12;AU-3,0.4597;0.3588,"auto_k=2 (etype=config, cutoff=9, elbow=9, max_k=2)",config
+747,Code repo org/payments contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;RA-5;SC-8,0.3328;0.3012;0.2889,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+754,Weekly vuln scan skipped on db-02; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3693;0.3285,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=ticket, cutoff=5, elbow=2, max_k=2)",ticket
+758,Incident INC-1042 lacks containment steps; trend not tracked across months.,IR-4;IR-5,SI-2;IR-4,0.3543;0.3208,"auto_k=2 (etype=ticket, cutoff=5, elbow=3, max_k=2)",ticket
+761,Asset inventory lacks serverless functions and data stores in AWS.,CM-8,CM-8,0.3002,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=ticket, cutoff=3, elbow=1, max_k=2)",ticket
+773,Endpoint AV disabled on proxy-01; malware signatures outdated 21 days.,SI-3,SI-3,0.4429,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+781,IDS alert lateral movement from 10.0.9.8 to 10.0.30.5; firewall allows any-any.,SC-7;SI-4,SI-4;AC-17;SC-7,0.4598;0.3660;0.3564,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+783,Wireless AP AP-LAB-12 uses default credentials and open SSID Visitor.,AC-18;IA-5,AC-18,0.5844,"auto_k=1 (etype=log, cutoff=7, elbow=1, max_k=3)",log
+788,IdP password policy too weak; min length 12; MFA optional for some apps.,IA-5;IA-2,IA-2,0.5941,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+797,Endpoint AV disabled on laptop-22; malware signatures outdated 7 days.,SI-3,SI-3,0.4679,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+828,Weekly vuln scan skipped on db-02; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3693;0.3285,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=ticket, cutoff=5, elbow=2, max_k=2)",ticket
+837,SIEM review missed for 7 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6,0.3556;0.3217,"auto_k=2 (etype=config, cutoff=7, elbow=7, max_k=2)",config
+844,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+847,IdP password policy too weak; min length 8; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6003,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+848,Multiple failed logins from 172.16.3.4 to auth-service; account bob not locked after 10 attempts.,AC-7;AU-6,AC-7,0.6858,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+852,SIEM review missed for 30 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6,0.3655;0.3379,"auto_k=2 (etype=config, cutoff=8, elbow=4, max_k=2)",config
+853,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+858,IDS alert lateral movement from 10.0.2.14 to 10.0.30.5; firewall allows any-any.,SC-7;SI-4,SI-4;AC-17,0.4580;0.3663,"auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+866,Backups not encrypted; last restore test older than 9 months.,CP-9;SC-28,CP-9,0.4680,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+867,Endpoint AV disabled on web-02; malware signatures outdated 7 days.,SI-3,SI-3,0.4685,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+877,Wireless AP AP-HQ-01 uses default credentials and open SSID LobbyNet.,AC-18;IA-5,AC-18,0.5692,"auto_k=1 (etype=config, cutoff=8, elbow=1, max_k=2)",config
+883,IDS alert lateral movement from 10.0.40.21 to 10.0.41.7; firewall allows any-any.,SC-7;SI-4,SI-4;AC-17,0.4674;0.3573,"auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+885,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+888,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+899,Multiple failed logins from 10.0.5.12 to billing; account deploy-bot not locked after 7 attempts.,AC-7;AU-6,AC-7,0.5879,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=config, cutoff=7, elbow=1, max_k=2)",config
+901,Code repo org/web contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;CM-6,0.3423;0.3421,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+905,Asset inventory lacks serverless functions and data stores in GCP.,CM-8,CM-8,0.3229,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=ticket, cutoff=5, elbow=1, max_k=2)",ticket
+918,Asset inventory lacks serverless functions and data stores in AWS.,CM-8,CM-8,0.3002,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=log, cutoff=3, elbow=1, max_k=3)",log
+924,S3 bucket dev-artifacts not encrypted at rest; KMS key reuse across apps.,SC-28;SC-12,SC-28;SC-12,0.5242;0.3961,"+0.08 SC-28 (any:at rest,s3 bucket,disk encryption,kms,storage encryption) | +0.06 SC-12 (any:kms,key rotation,key reuse,key management) | -0.06 SC-8 (neg:at rest,disk) | auto_k=2 (etype=config, cutoff=9, elbow=2, max_k=2)",config
+925,App billing does not emit audit records for authentication events.,AU-2;AU-12,AU-12;AU-3,0.4530;0.3648,"auto_k=2 (etype=config, cutoff=8, elbow=8, max_k=2)",config
+926,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+939,IdP password policy too weak; min length 8; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6003,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+941,File integrity monitoring not deployed on ci-runner-3 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.4485,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+945,SIEM review missed for 21 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6;IR-5,0.3460;0.3135;0.2798,"auto_k=3 (etype=log, cutoff=7, elbow=7, max_k=3)",log
+951,Weekly vuln scan skipped on queue-01; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3392;0.3151,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=config, cutoff=5, elbow=2, max_k=2)",config
+985,Asset inventory lacks serverless functions and data stores in AWS.,CM-8,CM-8,0.3002,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=log, cutoff=3, elbow=1, max_k=3)",log
+991,Multiple failed logins from 10.2.14.9 to kube-api; account svc-app not locked after 5 attempts.,AC-7;AU-6,AC-7,0.5616,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+994,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+999,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+1005,Audit logs missing source IP and user fields in ingress.,AU-3;AU-12,AU-3;AU-12,0.3947;0.3810,"auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+1010,IdP password policy too weak; min length 10; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6062,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1014,S3 bucket finance-archive not encrypted at rest; KMS key reuse across apps.,SC-28;SC-12,SC-28,0.5839,"+0.08 SC-28 (any:at rest,s3 bucket,disk encryption,kms,storage encryption) | +0.06 SC-12 (any:kms,key rotation,key reuse,key management) | -0.06 SC-8 (neg:at rest,disk) | auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+1015,IdP password policy too weak; min length 8; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6003,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1023,Asset inventory lacks serverless functions and data stores in GCP.,CM-8,CM-8,0.3229,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=ticket, cutoff=5, elbow=1, max_k=2)",ticket
+1024,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+1026,S3 bucket finance-archive not encrypted at rest; KMS key reuse across apps.,SC-28;SC-12,SC-28,0.5839,"+0.08 SC-28 (any:at rest,s3 bucket,disk encryption,kms,storage encryption) | +0.06 SC-12 (any:kms,key rotation,key reuse,key management) | -0.06 SC-8 (neg:at rest,disk) | auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+1028,Endpoint AV disabled on web-02; malware signatures outdated 14 days.,SI-3,SI-3,0.4634,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1036,VPN profile AnyConnect allows remote access without MFA for group support.,AC-17;IA-2,IA-2;AC-17,0.4915;0.4849,"auto_k=2 (etype=ticket, cutoff=10, elbow=2, max_k=2)",ticket
+1037,TLS disabled on admin-portal; HTTP allowed; weak ciphers TLS_RSA_WITH_NULL_SHA.,SC-8;SC-13,SC-8;SC-13,0.3792;0.3539,"-0.10 AU-8 (neg:tls,cipher) | +0.08 SC-8 (any:http , tls,https,in transit,cipher) | auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+1041,Missing monthly patching; critical CVEs outstanding on app-01.,SI-2;RA-5,SI-2,0.5826,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1044,Code repo org/ops contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,SI-7;CM-6;CM-2,0.3447;0.3335;0.3031,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+1057,Wireless AP AP-LAB-12 uses default credentials and open SSID Corp-Open.,AC-18;IA-5,AC-18,0.5887,"auto_k=1 (etype=ticket, cutoff=6, elbow=1, max_k=2)",ticket
+1058,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1078,Weekly vuln scan skipped on cache-01; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3353;0.3269,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=ticket, cutoff=4, elbow=2, max_k=2)",ticket
+1081,Endpoint AV disabled on web-02; malware signatures outdated 30 days.,SI-3,SI-3,0.4713,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+1082,Endpoint AV disabled on web-02; malware signatures outdated 21 days.,SI-3,SI-3,0.4711,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1087,Weekly vuln scan skipped on queue-01; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3392;0.3151,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=config, cutoff=5, elbow=2, max_k=2)",config
+1089,SIEM review missed for 30 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6;IR-5,0.3655;0.3379;0.2833,"auto_k=3 (etype=log, cutoff=8, elbow=4, max_k=3)",log
+1096,Asset inventory lacks serverless functions and data stores in GCP.,CM-8,CM-8,0.3229,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=ticket, cutoff=5, elbow=1, max_k=2)",ticket
+1098,Endpoint AV disabled on proxy-01; malware signatures outdated 30 days.,SI-3,SI-3,0.4406,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1106,App vpn-gateway does not emit audit records for authentication events.,AU-2;AU-12,AU-12;AU-3;AU-2,0.4264;0.3448;0.3080,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+1108,File integrity monitoring not deployed on web-02 fleet; checksum alerts missing.,SI-7;SI-4,SI-7,0.5214,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+1109,Missing monthly patching; critical CVEs outstanding on queue-01.,SI-2;RA-5,SI-2,0.5912,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1110,Baseline hardening not applied on Amazon Linux 2 nodes; CIS controls disabled.,CM-6;CM-2,CM-2;CM-6,0.3813;0.3074,"auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+1111,Code repo org/api contains committed secrets; no SAST/secret scanning in CI.,SA-11;IA-5;SI-7,CM-6;SI-7,0.2997;0.2949,"+0.08 SA-11 (any:sast,dast,code review,ci pipeline,secret scanning) | auto_k=2 (etype=ticket, cutoff=10, elbow=10, max_k=2)",ticket
+1114,Backups not encrypted; last restore test older than 12 months.,CP-9;SC-28,CP-9,0.4589,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+1118,Asset inventory lacks serverless functions and data stores in AWS.,CM-8,CM-8,0.3002,"+0.08 CM-8 (any:inventory,asset inventory,shadow it,untracked devices) | auto_k=1 (etype=ticket, cutoff=3, elbow=1, max_k=2)",ticket
+1119,Audit logs missing source IP and user fields in api-gateway.,AU-3;AU-12,AU-3;AU-12,0.3353;0.3262,"auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+1124,Wireless AP AP-3F-07 uses default credentials and open SSID GuestNet.,AC-18;IA-5,AC-18,0.5491,"auto_k=1 (etype=log, cutoff=6, elbow=1, max_k=3)",log
+1128,IdP password policy too weak; min length 8; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6003,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1142,TLS disabled on ingress; HTTP allowed; weak ciphers TLS_RSA_WITH_RC4_128_SHA.,SC-8;SC-13,SC-8;SC-28,0.3603;0.3055,"-0.10 AU-8 (neg:tls,cipher) | +0.08 SC-8 (any:http , tls,https,in transit,cipher) | auto_k=2 (etype=ticket, cutoff=6, elbow=4, max_k=2)",ticket
+1146,Backups not encrypted; last restore test older than 12 months.,CP-9;SC-28,CP-9,0.4589,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1150,TLS disabled on ingress; HTTP allowed; weak ciphers TLS_RSA_WITH_RC4_128_SHA.,SC-8;SC-13,SC-8;SC-28,0.3603;0.3055,"-0.10 AU-8 (neg:tls,cipher) | +0.08 SC-8 (any:http , tls,https,in transit,cipher) | auto_k=2 (etype=config, cutoff=6, elbow=4, max_k=2)",config
+1153,Backups not encrypted; last restore test older than 18 months.,CP-9;SC-28,CP-9,0.4604,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1158,Endpoint AV disabled on db-01; malware signatures outdated 7 days.,SI-3,SI-3,0.4486,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1160,IDS alert lateral movement from 10.0.40.21 to 10.0.55.9; firewall allows any-any.,SC-7;SI-4,SI-4;AC-17;SC-7,0.4706;0.3580;0.3459,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+1163,IDS alert lateral movement from 10.0.40.21 to 10.0.30.5; firewall allows any-any.,SC-7;SI-4,SI-4;AC-17;SC-7,0.4666;0.3658;0.3543,"auto_k=3 (etype=log, cutoff=10, elbow=10, max_k=3)",log
+1176,Change deployed to prod without approval link; emergency process not documented.,CM-3;SA-11,CM-3,0.3789,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+1180,Wireless AP AP-LAB-12 uses default credentials and open SSID GuestNet.,AC-18;IA-5,AC-18,0.5598,"auto_k=1 (etype=config, cutoff=5, elbow=1, max_k=2)",config
+1181,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+1188,Wireless AP AP-HQ-01 uses default credentials and open SSID GuestNet.,AC-18;IA-5,AC-18,0.5500,"auto_k=1 (etype=log, cutoff=5, elbow=1, max_k=3)",log
+1191,Missing monthly patching; critical CVEs outstanding on queue-01.,SI-2;RA-5,SI-2,0.5912,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+1193,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=ticket, cutoff=10, elbow=1, max_k=2)",ticket
+1196,IdP password policy too weak; min length 8; MFA optional for some apps.,IA-5;IA-2,IA-2,0.6003,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1200,Weekly vuln scan skipped on cache-01; unauthenticated mode misses config vulns.,RA-5;SI-2,RA-5;SI-2,0.3353;0.3269,"+0.08 RA-5 (any:vuln scan,vulnerability scan,unauthenticated scan,weekly scan) | auto_k=2 (etype=ticket, cutoff=4, elbow=2, max_k=2)",ticket
+1204,API gateway rate limiting disabled; prior DDoS impacted availability.,SC-5;SC-7,SC-5,0.5128,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+1208,Baseline hardening not applied on Amazon Linux 2 nodes; CIS controls disabled.,CM-6;CM-2,CM-2;CM-6,0.3813;0.3074,"auto_k=2 (etype=config, cutoff=10, elbow=10, max_k=2)",config
+1211,Missing monthly patching; critical CVEs outstanding on app-01.,SI-2;RA-5,SI-2,0.5826,"auto_k=1 (etype=config, cutoff=10, elbow=1, max_k=2)",config
+1214,Multiple failed logins from 10.0.5.12 to vpn-gateway; account deploy-bot not locked after 7 attempts.,AC-7;AU-6,AC-7,0.5614,"+0.10 AC-7 (any:failed login,failed logins,logon attempts,lockout) | auto_k=1 (etype=config, cutoff=5, elbow=1, max_k=2)",config
+1217,SIEM review missed for 30 days; high severity alerts untriaged.,AU-6;SI-4,SI-2;AU-6,0.3655;0.3379,"auto_k=2 (etype=ticket, cutoff=8, elbow=4, max_k=2)",ticket
+1231,Backups not encrypted; last restore test older than 18 months.,CP-9;SC-28,CP-9,0.4604,"auto_k=1 (etype=log, cutoff=10, elbow=1, max_k=3)",log
+1232,Incident INC-1077 lacks containment steps; trend not tracked across months.,IR-4;IR-5,SI-2;IR-5,0.3509;0.3390,"auto_k=2 (etype=config, cutoff=5, elbow=3, max_k=2)",config
+1237,Wireless AP AP-DC-04 uses default credentials and open SSID Visitor.,AC-18;IA-5,AC-18,0.5990,"auto_k=1 (etype=ticket, cutoff=5, elbow=1, max_k=2)",ticket

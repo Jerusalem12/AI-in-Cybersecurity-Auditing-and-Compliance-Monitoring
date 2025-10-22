@@ -65,3 +65,11 @@ class EmbeddingRecommender(BaseRecommender):
         sims = (self.X @ q)  # cosine if normalized
         idx = np.argsort(-sims)[:k]
         return [self.control_ids[i] for i in idx], sims[idx].tolist()
+
+    def predict_adaptive(self, text: str, threshold: float = 0.3, boosts=None, negatives=None):
+        q = self.model.encode([text])[0]
+        sims = (self.X @ q)  # cosine if normalized
+        # Get all controls above threshold, sorted by score
+        idx = np.where(sims >= threshold)[0]
+        sorted_idx = idx[np.argsort(-sims[idx])]
+        return [self.control_ids[i] for i in sorted_idx], sims[sorted_idx].tolist()

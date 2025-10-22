@@ -28,7 +28,7 @@ recommend-tfidf:
 
 eval-tfidf:
 	${VENV} && python -m src.cli.evaluate --config ${CONFIG_EVAL} \
-	  --pred outputs/predictions/tfidf/test.csv
+	  --pred outputs/predictions/tfidf/test.csv --set_metrics
 	@if [ -f eval/tables/metrics.csv ]; then \
 	  mv eval/tables/metrics.csv eval/tables/metrics_tfidf.csv; \
 	  echo "✓ Saved metrics to eval/tables/metrics_tfidf.csv"; \
@@ -47,7 +47,7 @@ recommend-embeddings:
 
 eval-embeddings:
 	${VENV} && python -m src.cli.evaluate --config ${CONFIG_EVAL} \
-	  --pred outputs/predictions/embeddings/test.csv
+	  --pred outputs/predictions/embeddings/test.csv --set_metrics
 	@if [ -f eval/tables/metrics.csv ]; then \
 	  mv eval/tables/metrics.csv eval/tables/metrics_embeddings.csv; \
 	  echo "✓ Saved metrics to eval/tables/metrics_embeddings.csv"; \
