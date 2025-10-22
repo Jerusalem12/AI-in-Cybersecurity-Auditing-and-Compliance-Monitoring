@@ -1,0 +1,41 @@
+seed: 42
+k: 3
+model: hybrid
+
+recommend:
+  candidate_k: 10        # expand pool before rules
+  top_n: 10              # max items stored if auto_k disabled
+  min_score: 0.00        # base threshold before auto-k (kept for compat)
+
+  auto_k:
+    enabled: true
+    min_k: 1             # never return fewer than this
+    max_k: 5             # cap to avoid spam
+    min_score: 0.15      # keep items above this absolute score
+    drop_ratio: 0.25     # "elbow": cut where (s[i-1]-s[i])/s[i-1] >= 0.25
+    per_type_max_k:      # optional tighter caps by evidence_type
+      log: 3
+      config: 2
+      ticket: 2
+
+paths:
+  controls: data/raw/controls.csv
+  artifacts: data/raw/artifacts.csv
+  predictions_dir: outputs/predictions/hybrid
+  models_dir: models/hybrid
+  rules: configs/rules.yaml
+
+hybrid:
+  alpha: 0.6            # Weight for embeddings (0.6 = 60% embeddings, 40% TF-IDF)
+  tfidf:
+    ngram_range: [1, 2]
+    min_df: 1
+  embeddings:
+    model_name: sentence-transformers/all-MiniLM-L6-v2
+
+rules:
+  enabled: true
+
+feedback:
+  alpha: 0.03
+  beta: 0.01

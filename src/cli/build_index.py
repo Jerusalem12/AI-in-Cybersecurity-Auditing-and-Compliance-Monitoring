@@ -5,6 +5,7 @@ from crs.dataio import load_controls
 from crs.controls import build_index_text
 from crs.recommenders.tfidf import TFIDFRecommender
 from crs.recommenders.embeddings import EmbeddingRecommender
+from crs.recommenders.hybrid import HybridRecommender
 from crs.utils import ensure_dir
 
 def main():
@@ -24,6 +25,17 @@ def main():
     if model_type == "embeddings":
         rec = EmbeddingRecommender(model_name=cfg.get("embeddings", {}).get("model_name")).fit(texts, cids)
         out = model_dir / "emb_index.pkl"
+    elif model_type == "hybrid":
+        hybrid_cfg = cfg.get("hybrid", {})
+        alpha = hybrid_cfg.get("alpha", 0.6)
+        tfidf_params = hybrid_cfg.get("tfidf", {})
+        emb_params = {"model_name": hybrid_cfg.get("embeddings", {}).get("model_name")}
+        rec = HybridRecommender(
+            alpha=alpha,
+            tfidf_params={"ngram_range": tuple(tfidf_params.get("ngram_range", [1,2])), "min_df": tfidf_params.get("min_df", 1)},
+            emb_params=emb_params
+        ).fit(texts, cids)
+        out = model_dir / "hybrid_index.pkl"
     else:
         rec = TFIDFRecommender(
             ngram_range=tuple(cfg.get("tfidf", {}).get("ngram_range", [1,2])),

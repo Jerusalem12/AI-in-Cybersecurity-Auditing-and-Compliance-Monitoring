@@ -5,6 +5,7 @@ import pandas as pd
 from crs.dataio import load_artifacts, save_predictions
 from crs.recommenders.tfidf import TFIDFRecommender
 from crs.recommenders.embeddings import EmbeddingRecommender
+from crs.recommenders.hybrid import HybridRecommender
 from crs.postrules import apply_post_rules, Rule
 
 def load_rules(rule_path: str | None):
@@ -96,6 +97,8 @@ def main():
     # load recommender
     if model_type == "embeddings":
         rec = EmbeddingRecommender().load(model_dir / "emb_index.pkl")
+    elif model_type == "hybrid":
+        rec = HybridRecommender().load(model_dir / "hybrid_index.pkl")
     else:
         rec = TFIDFRecommender().load(model_dir / "tfidf_index.pkl")
 
