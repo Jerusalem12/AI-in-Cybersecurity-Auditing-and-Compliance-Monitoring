@@ -1,105 +1,72 @@
-# Compliance Recommendation System (CRS)
+# Control Retrieval Suite (CRS)
 
-AI-assisted mapping of operational artifacts to **NIST SP 800-53 r5** controls, with **OSCAL** evidence output and **auditor feedback**.
+This repository assembles an evaluation-ready pipeline for mapping short operational artifacts (logs, configuration diffs, tickets) to NIST SP 800-53 Rev. 5 controls. The workflow emphasizes leakage-free data preparation, hybrid retrieval, calibrated scoring, and audit-friendly outputs that can be promoted to OSCAL assessment-results artifacts.
 
 ## Quickstart
-```bash
-python -m venv .venv && . .venv/bin/activate
-pip install -U pip
-pip install -e .
-# Put your CSVs here:
-mkdir -p data/raw
-# copy files: data/raw/controls.csv, data/raw/artifacts.csv
-make index
-make recommend
-make eval
+
+1. **Review the data contract** in `data/raw/controls.csv` and `data/raw/artifacts.csv`. Ensure columns and types match the expected schema (see below).
+2. **Work through the notebooks in order** under `notebooks/`. Each notebook documents its purpose, inputs/outputs, detailed steps, and acceptance checks.
+3. **Populate processed artifacts** by executing Notebook `01`. Subsequent notebooks consume its outputs.
+4. **Train retrieval models** (Notebooks `03`–`05`) after generating supervised pairs in `02`.
+5. **Run inference** with Notebook `06` to write predictions for the held-out test split.
+6. **Evaluate and perform ablations** in Notebook `07`, which writes summary metrics to `eval/tables/metrics.csv` and validates leak checks.
+
+All configurable paths and thresholds live in `configs/predict_hybrid.yaml`.
+
+## Data Schema
+
+### `data/raw/controls.csv`
+- `control_id`: NIST control identifier (e.g., `AC-2`).
+- `family`: Control family abbreviation.
+- `title`: Human-readable control title.
+- `summary`: Short description used to construct lexical/semantic indices.
+
+### `data/raw/artifacts.csv`
+- `artifact_id`: Unique ID for each operational artifact.
+- `text`: Artifact text snippet.
+- `evidence_type`: Category describing the artifact source (log, ticket, etc.).
+- `timestamp`: ISO8601 timestamp or similar; coerced to datetime during preprocessing.
+- `partition` (optional): Desired split label (`train`, `dev`, `test`). Missing/blank values are reassigned via 60/20/20 splits with a fixed seed.
+- `gold_controls`: Pipe- or comma-delimited list of authoritative control IDs.
+- `gold_rationale`: Free-text justification for the gold mapping.
+
+## Notebook Workflow
+
+1. `01_data_prep_and_splits.ipynb` – Validate raw data, enforce partitions, and remove duplicate texts across splits.
+2. `02_build_pairs_hard_negatives.ipynb` – Generate positive/negative control pairs per artifact using lexical retrieval.
+3. `03_train_bi_encoder.ipynb` – Fine-tune a bi-encoder retriever (`multi-qa-mpnet-base-dot-v1`).
+4. `04_train_cross_encoder_and_calibrate.ipynb` – Train a cross-encoder reranker and calibrate probabilities on the dev split.
+5. `05_train_cardinality_autok.ipynb` – Fit an Auto-K classifier that predicts how many controls to emit per artifact.
+6. `06_predict_unified_pipeline.ipynb` – Execute the end-to-end retrieval, reranking, calibration, and cardinality logic for inference.
+7. `07_evaluate_and_ablations.ipynb` – Compute metrics, rerun leakage checks, and document ablation findings.
+
+## Directory Layout
+
+```
+crs/
+├─ notebooks/                  # Planning notebooks (no executable code committed)
+├─ data/
+│  ├─ raw/                     # Source CSVs from NIST catalog and labeled artifacts
+│  └─ processed/               # Leak-free artifact splits and pair data
+├─ models/                     # Saved retrievers, rerankers, calibration, Auto-K assets
+├─ outputs/predictions/        # Unified pipeline predictions (dev/test)
+├─ eval/tables/                # Evaluation tables written by Notebook 07
+├─ configs/                    # Runtime configuration (`predict_hybrid.yaml`)
+├─ README.md                   # This guide
+└─ LICENSE                     # Repository license
 ```
 
-## Project Structure
+## Configuration Highlights (`configs/predict_hybrid.yaml`)
+- Paths for raw/processed data, trained models, and evaluation outputs.
+- Retrieval depths for BM25 and bi-encoder candidates, fusion weights, and rerank cutoffs.
+- Cross-encoder calibration threshold and Auto-K enablement.
 
-```
-.
-├─ README.md
-├─ LICENSE
-├─ .gitignore
-├─ pyproject.toml
-├─ Makefile
-├─ .pre-commit-config.yaml
-├─ configs/
-│  ├─ defaults.yaml
-│  └─ eval.yaml
-├─ data/              # raw/ (inputs), interim/, processed/
-├─ models/            # saved vectorizers/embeddings
-├─ src/
-│  ├─ crs/            # library code (dataio, recommenders, metrics, oscal)
-│  └─ cli/            # scripts: build_index, recommend, evaluate, learn_feedback
-├─ outputs/           # predictions, oscal bundles
-└─ eval/              # tables and plots
-```
+## OSCAL Alignment
 
-## What it does
+The pipeline is designed so that `outputs/predictions/*.csv` can be transformed into OSCAL assessment-results assets. When ready, add an `oscal/` folder with a README describing the JSON serialization that maps predictions to the OSCAL assessment-results model.
 
-* **Recommender**: TF-IDF (and optional embeddings) + cosine similarity over control text.
-* **Feedback**: accept/reject/add logs � learn boosts/penalties.
-* **Metrics**: Top-1 accuracy, P@3/R@3, Jaccard; Acceptance Rate; Time-to-Evidence; Set-based P/R/F1.
-* **Evidence**: Exports OSCAL *assessment-results* JSON.
-* **Auto-K**: Variable-length predictions using elbow detection and per-type limits.
+## Next Steps
 
-## Config
-
-See `configs/tfidf.yaml` or `configs/embeddings.yaml` for model configuration.
-
-### Auto-K: Intelligent Variable-Length Predictions
-
-The system uses an **auto-k** algorithm that automatically determines how many controls to recommend for each finding:
-
-**How it works:**
-1. **Score threshold**: Keeps controls above `min_score` (e.g., 0.15)
-2. **Elbow detection**: Detects sharp drops in similarity scores (e.g., 0.75 → 0.30)
-3. **Clamping**: Ensures results stay within `min_k` to `max_k` bounds
-4. **Per-type limits**: Different caps for logs (3), configs (2), tickets (2)
-
-**Configuration** ([tfidf.yaml](configs/tfidf.yaml)):
-```yaml
-recommend:
-  candidate_k: 10        # Initial pool size
-  auto_k:
-    enabled: true
-    min_k: 1             # Never return fewer than this
-    max_k: 5             # Cap to avoid spam
-    min_score: 0.15      # Absolute score threshold
-    drop_ratio: 0.25     # Elbow: cut where score drops ≥25%
-    per_type_max_k:
-      log: 3
-      config: 2
-      ticket: 2
-```
-
-**Results:**
-- Finding with 1 highly relevant control → returns 1
-- Finding with clear top-3 (elbow at 3) → returns 3
-- Finding with many similar controls → capped at max_k
-
-**Command-line override:**
-```bash
-python -m cli.recommend --config configs/tfidf.yaml --in data/raw/artifacts.csv --out outputs/predictions/test.csv --candidate_k 15
-```
-
-### Set-Based Metrics
-
-When using auto-k, use set-based metrics that respect variable-length predictions:
-
-```bash
-python -m cli.evaluate --config configs/eval.yaml --pred outputs/predictions/test.csv --set_metrics
-```
-
-This computes:
-- **set_precision**: |gold ∩ pred| / |pred| (average across all findings)
-- **set_recall**: |gold ∩ pred| / |gold| (average across all findings)
-- **set_f1**: Harmonic mean of set precision and recall
-
-These metrics don't require choosing a fixed k value.
-
-## Citation
-
-Based on class project guidance and *Towards Automated Continuous Security Compliance (ESEM '24)* for problem framing.
+- Execute the notebooks to materialize processed data, trained models, and evaluation artifacts.
+- Integrate automated tests or scripts (e.g., unit tests around feature extraction) once the core pipeline is coded.
+- Extend the repository with scripts or CLIs mirroring the notebook logic for production deployment.
