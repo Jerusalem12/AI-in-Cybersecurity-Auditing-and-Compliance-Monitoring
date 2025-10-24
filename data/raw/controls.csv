@@ -30,3 +30,6 @@ SI-3,SI,Malicious Code Protection,Deploy/monitor anti-malware; update signatures
 SI-4,SI,System Monitoring,Detect anomalous behavior via IDS/EDR/SIEM.
 SI-7,SI,"Software, Firmware, and Information Integrity","Use integrity checks (FIM, checksums) and signed updates."
 CP-9,CP,Information System Backup,"Perform, protect, and test backups; ensure restorability."
+AT-2,AT,Literacy Training and Awareness,Provide security awareness training to all users on policies and threats.
+AT-3,AT,Role-Based Training,Provide role-specific security training for privileged users and developers.
+AU-11,AU,Audit Record Retention,Retain audit logs for required periods; protect from unauthorized access.

@@ -1,0 +1,55 @@
+{
+  "features": [
+    {
+      "name": "s1",
+      "description": "Top 1 calibrated score"
+    },
+    {
+      "name": "s2",
+      "description": "Top 2 calibrated score"
+    },
+    {
+      "name": "s3",
+      "description": "Top 3 calibrated score"
+    },
+    {
+      "name": "s4",
+      "description": "Top 4 calibrated score"
+    },
+    {
+      "name": "delta_12",
+      "description": "s1 - s2 (score gap)"
+    },
+    {
+      "name": "delta_23",
+      "description": "s2 - s3 (score gap)"
+    },
+    {
+      "name": "entropy",
+      "description": "Score entropy"
+    },
+    {
+      "name": "type_config",
+      "description": "Evidence type: config (one-hot)"
+    },
+    {
+      "name": "type_log",
+      "description": "Evidence type: log (one-hot)"
+    },
+    {
+      "name": "type_ticket",
+      "description": "Evidence type: ticket (one-hot)"
+    }
+  ],
+  "num_features": 10,
+  "classes": [
+    1,
+    2,
+    3
+  ],
+  "class_names": [
+    "k=1",
+    "k=2",
+    "k=3"
+  ]
+}
