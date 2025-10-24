@@ -8,13 +8,6 @@ __pycache__/
 # Jupyter
 .ipynb_checkpoints/
 
-# Data & artifacts
-data/interim/
-data/processed/
-models/
-outputs/
-eval/plots/
-*.png
 
 # OS
 .DS_Store

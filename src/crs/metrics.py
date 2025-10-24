@@ -49,3 +49,39 @@ def time_to_evidence_reduction(manual_seconds: list[int], assisted_seconds: list
     m=float(np.median(manual_seconds))
     a=float(np.median(assisted_seconds))
     return float((m-a)/m) if m>0 else 0.0
+
+def set_precision(df_preds: pd.DataFrame) -> float:
+    """
+    Precision using variable-length predictions (not fixed k).
+    For each artifact: |gold ∩ pred| / |pred|
+    """
+    vals=[]
+    for _, r in df_preds.iterrows():
+        gold = set(parse_gold(r["gold_controls"]))
+        pred = set([x for x in str(r["predicted_topk"]).split(";") if x])
+        if len(pred)==0:
+            vals.append(0.0)
+        else:
+            vals.append(len(gold & pred) / len(pred))
+    return float(sum(vals)/len(vals)) if vals else 0.0
+
+def set_recall(df_preds: pd.DataFrame) -> float:
+    """
+    Recall using variable-length predictions (not fixed k).
+    For each artifact: |gold ∩ pred| / |gold|
+    """
+    vals=[]
+    for _, r in df_preds.iterrows():
+        gold = set(parse_gold(r["gold_controls"]))
+        pred = set([x for x in str(r["predicted_topk"]).split(";") if x])
+        vals.append(len(gold & pred) / len(gold) if gold else 0.0)
+    return float(sum(vals)/len(vals)) if vals else 0.0
+
+def set_f1(df_preds: pd.DataFrame) -> float:
+    """
+    F1-score using variable-length predictions.
+    F1 = 2 * (precision * recall) / (precision + recall)
+    """
+    p = set_precision(df_preds)
+    r = set_recall(df_preds)
+    return (2*p*r)/(p+r) if (p+r)>0 else 0.0
