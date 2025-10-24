@@ -1,0 +1,5 @@
+metric,value
+top1_accuracy,0.8875
+precision@3,0.3902777777777777
+recall@3,0.65
+jaccard@3,0.4895833333333333
