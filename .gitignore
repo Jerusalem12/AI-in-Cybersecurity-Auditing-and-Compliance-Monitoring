@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data & artifacts
+data/interim/
+data/processed/
+models/
+outputs/
+eval/plots/
+*.png
+
+# OS
+.DS_Store

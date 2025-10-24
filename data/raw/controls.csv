@@ -1,0 +1,32 @@
+control_id,family,title,summary
+AC-17,AC,Remote Access,"Authorize, monitor, and control remote/VPN access according to policy."
+AC-18,AC,Wireless Access,Manage and secure wireless APs/clients; require authorization and secure configs.
+AC-2,AC,Account Management,"Create, modify, disable, and remove accounts; review roles and privileges regularly."
+AC-6,AC,Least Privilege,Restrict privileges to the minimum necessary; monitor admin use and escalation.
+AC-7,AC,Unsuccessful Logon Attempts,Enforce lockout/backoff after a defined number of failed attempts.
+AU-12,AU,Audit Generation,Ensure applications/components generate audit records for defined events.
+AU-2,AU,Event Logging,Define auditable events and ensure systems generate logs for them.
+AU-3,AU,Content of Audit Records,"Include timestamp, user, source, and event details sufficient for forensics."
+AU-6,AU,"Audit Review, Analysis, and Reporting",Regularly review and analyze logs; correlate and report anomalies.
+AU-8,AU,Time Synchronization,"Synchronize clocks to an authoritative source (e.g., NTP); manage drift."
+CM-2,CM,Baseline Configuration,Establish and maintain approved secure baselines for systems.
+CM-3,CM,Configuration Change Control,"Track, approve, and document changes to the baseline configuration."
+CM-6,CM,Configuration Settings,"Define and enforce security configuration settings (e.g., CIS benchmarks)."
+CM-8,CM,System Component Inventory,"Maintain an accurate, up-to-date inventory of hardware/software components."
+CP-9,CP,Information Backup,Back up data and test restoration; protect backup media.
+IA-2,IA,Identification and Authentication (Org Users),Authenticate users; enforce MFA as appropriate.
+IA-5,IA,Authenticator Management,"Manage passwords, keys, tokens; rotation and complexity requirements."
+IR-4,IR,Incident Handling,"Containment, eradication, recovery activities are defined and executed."
+IR-5,IR,Incident Monitoring,Track and analyze incidents and trends; maintain metrics.
+RA-5,RA,Vulnerability Monitoring and Scanning,Perform routine/authenticated scans and track remediation.
+SA-11,SA,Developer Testing and Evaluation,Perform code review and static/dynamic testing in the SDLC.
+SC-12,SC,Cryptographic Key Establishment and Management,Establish and manage cryptographic keys securely.
+SC-13,SC,Cryptographic Protection,Use approved crypto algorithms and modules appropriately.
+SC-28,SC,Protection of Information at Rest,Encrypt data at rest and manage keys securely.
+SC-5,SC,Denial-of-Service Protection,Protect against DoS attacks with rate limiting and filtering.
+SC-7,SC,Boundary Protection,Enforce network segmentation and filtering at boundaries.
+SC-8,SC,Transmission Confidentiality and Integrity,Protect data in transit via TLS/HTTPS and integrity checks.
+SI-2,SI,Flaw Remediation,Patch management cadence and monitoring of missing updates.
+SI-3,SI,Malicious Code Protection,Deploy and manage anti-malware; scanning and response.
+SI-4,SI,System Monitoring,Detect/respond to events using IDS/IPS/SIEM with correlation.
+SI-7,SI,Software/Firmware/Information Integrity,Monitor integrity of code/files; FIM and checksums.
