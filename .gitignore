@@ -19,11 +19,8 @@ venv
 *.bin
 *.pt
 *.pth
+models/*/
 
-# Data outputs
-outputs/predictions/
-eval/tables/*.csv
-eval/tables/*.png
 
 # Virtual environment
 venv/
