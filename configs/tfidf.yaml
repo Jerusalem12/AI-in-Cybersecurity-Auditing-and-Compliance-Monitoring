@@ -3,7 +3,7 @@ k: 3
 model: tfidf
 
 recommend:
-  k_pred: 2
+  k_pred: 3
 
 paths:
   controls: data/raw/controls.csv
@@ -17,7 +17,7 @@ tfidf:
   min_df: 1
 
 rules:
-  enabled: false
+  enabled: true
 
 feedback:
   alpha: 0.03
