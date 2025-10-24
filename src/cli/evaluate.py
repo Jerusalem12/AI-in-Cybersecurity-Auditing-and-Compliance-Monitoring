@@ -22,22 +22,15 @@ def main():
     print(f"Average predictions per finding: {avg_pred_length:.2f}")
     print(f"Min: {df['pred_length'].min()}, Max: {df['pred_length'].max()}")
 
-    k_list = cfg.get("k_list", [3])
     rows=[]
     rows.append({"metric": "top1_accuracy", "value": top1_accuracy(df)})
     rows.append({"metric": "avg_pred_length", "value": avg_pred_length})
 
-    # Set-based metrics (variable length)
+    # Set-based metrics (variable length) - always computed with auto-k
     if args.set_metrics:
         rows.append({"metric": "set_precision", "value": set_precision(df)})
         rows.append({"metric": "set_recall", "value": set_recall(df)})
         rows.append({"metric": "set_f1", "value": set_f1(df)})
-
-    # Fixed-k metrics
-    for k in k_list:
-        rows.append({"metric": f"precision@{k}", "value": precision_at_k(df, k=k)})
-        rows.append({"metric": f"recall@{k}", "value": recall_at_k(df, k=k)})
-        rows.append({"metric": f"jaccard@{k}", "value": jaccard(df, k=k)})
 
     if args.feedback_csv and Path(args.feedback_csv).exists():
         fb = pd.read_csv(args.feedback_csv)

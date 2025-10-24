@@ -1,11 +1,13 @@
 .PHONY: setup format test clean
 .PHONY: index-tfidf recommend-tfidf eval-tfidf
 .PHONY: index-embeddings recommend-embeddings eval-embeddings
-.PHONY: all-tfidf all-embeddings compare
+.PHONY: index-hybrid recommend-hybrid eval-hybrid
+.PHONY: all-tfidf all-embeddings all-hybrid compare
 
 VENV=. .venv/bin/activate
 CONFIG_TFIDF=configs/tfidf.yaml
 CONFIG_EMBEDDINGS=configs/embeddings.yaml
+CONFIG_HYBRID=configs/hybrid.yaml
 CONFIG_EVAL=configs/eval.yaml
 
 setup:
@@ -56,8 +58,27 @@ eval-embeddings:
 all-embeddings: index-embeddings recommend-embeddings eval-embeddings
 	@echo "✓ Embeddings pipeline complete"
 
-# Compare both models
-compare: all-tfidf all-embeddings
+# Hybrid pipeline
+index-hybrid:
+	${VENV} && python -m src.cli.build_index --config ${CONFIG_HYBRID}
+
+recommend-hybrid:
+	${VENV} && python -m src.cli.recommend --config ${CONFIG_HYBRID} \
+	  --in data/raw/artifacts.csv --out outputs/predictions/hybrid/test.csv --split test
+
+eval-hybrid:
+	${VENV} && python -m src.cli.evaluate --config ${CONFIG_EVAL} \
+	  --pred outputs/predictions/hybrid/test.csv --set_metrics
+	@if [ -f eval/tables/metrics.csv ]; then \
+	  mv eval/tables/metrics.csv eval/tables/metrics_hybrid.csv; \
+	  echo "✓ Saved metrics to eval/tables/metrics_hybrid.csv"; \
+	fi
+
+all-hybrid: index-hybrid recommend-hybrid eval-hybrid
+	@echo "✓ Hybrid pipeline complete"
+
+# Compare all three models
+compare: all-tfidf all-embeddings all-hybrid
 	@echo ""
 	@echo "======================================================================"
 	@echo "Model Comparison Results"
@@ -69,11 +90,15 @@ compare: all-tfidf all-embeddings
 	@echo "Embeddings Metrics:"
 	@cat eval/tables/metrics_embeddings.csv | column -t -s,
 	@echo ""
+	@echo "Hybrid (60% Emb + 40% TF-IDF) Metrics:"
+	@cat eval/tables/metrics_hybrid.csv | column -t -s,
+	@echo ""
 	@echo "Files saved:"
 	@echo "  - eval/tables/metrics_tfidf.csv"
 	@echo "  - eval/tables/metrics_embeddings.csv"
+	@echo "  - eval/tables/metrics_hybrid.csv"
 	@echo ""
 
 clean:
 	rm -rf data/interim data/processed models outputs eval/plots
-	mkdir -p outputs/oscal outputs/predictions/tfidf outputs/predictions/embeddings eval/tables eval/plots
+	mkdir -p outputs/oscal outputs/predictions/tfidf outputs/predictions/embeddings outputs/predictions/hybrid eval/tables eval/plots
