@@ -1,17 +1,40 @@
-# Control Retrieval Suite (CRS)
+# AI in Cybersecurity: Auditing and Compliance Monitoring
 
-This repository assembles an evaluation-ready pipeline for mapping short operational artifacts (logs, configuration diffs, tickets) to NIST SP 800-53 Rev. 5 controls. The workflow emphasizes leakage-free data preparation, hybrid retrieval, calibrated scoring, and audit-friendly outputs that can be promoted to OSCAL assessment-results artifacts.
+### **We originally worked on an analytical research project, as you can see in this repository; https://github.com/Pradyum-1712/AI-in-Cybersecurity-Auditing-and-Compliance-Monitoring. We aimed to complete about 50% of the implementation of that analytical paper by October 19. Unfortunately, we didn’t see your email recommending a problem–solution paper until October 20, which is when we decided to change our idea and start working on that instead.**
+
+### **This repository was created for the new idea, and here you’ll find the full implementation. However, if you’d like to see what we attempted with the analytical paper (even though we didn’t finish it), you can check it out in the link above.**
+
+This repository implements a complete machine learning pipeline for mapping operational artifacts (logs, configuration diffs, tickets) to NIST SP 800-53 Rev. 5 controls. The system features hybrid retrieval, cross-encoder reranking, calibrated probabilities, auto-K cardinality prediction, and continuous learning from auditor feedback.
+
+## Key Features
+
+- **Hybrid Retrieval**: Combines BM25 (lexical) + bi-encoder (semantic) with 40/60 weighting
+- **Cross-Encoder Reranking**: Fine-tuned reranker with isotonic regression calibration
+- **Auto-K Cardinality**: Predicts optimal number of controls per artifact (1-3)
+- **Rationale Enhancement**: Augments control descriptions with real-world usage patterns
+- **Continuous Learning**: Interactive feedback collection and model fine-tuning (Notebook 08 + 09)
+- **High Accuracy**: 87.2% mean accuracy on feedback data (95%+ on log/config, improving on tickets)
 
 ## Quickstart
 
-1. **Review the data contract** in `data/raw/controls.csv` and `data/raw/artifacts.csv`. Ensure columns and types match the expected schema (see below).
-2. **Work through the notebooks in order** under `notebooks/`. Each notebook documents its purpose, inputs/outputs, detailed steps, and acceptance checks.
-3. **Populate processed artifacts** by executing Notebook `01`. Subsequent notebooks consume its outputs.
-4. **Train retrieval models** (Notebooks `03`–`05`) after generating supervised pairs in `02`.
-5. **Run inference** with Notebook `06` to write predictions for the held-out test split.
-6. **Evaluate and perform ablations** in Notebook `07`, which writes summary metrics to `eval/tables/metrics.csv` and validates leak checks.
+### Initial Setup & Training
 
-All configurable paths and thresholds live in `configs/predict_hybrid.yaml`.
+1. **Install dependencies**: `pip install -r requirements.txt`
+2. **Prepare data**: Run `01_data_prep_and_splits.ipynb` to create 70/15/15 train/dev/test split with rationale-enhanced controls
+3. **Build training pairs**: Run `02_build_pairs_hard_negatives.ipynb` to generate supervised pairs
+4. **Train models** (in order):
+   - `03_train_bi_encoder.ipynb` - Semantic retrieval model
+   - `04_train_cross_encoder_and_calibrate.ipynb` - Reranker with calibration
+   - `05_train_cardinality_autok.ipynb` - Auto-K predictor
+5. **Run inference**: `06_predict_unified_pipeline.ipynb` - End-to-end predictions
+6. **Evaluate**: `07_evaluate_and_ablations.ipynb` - Metrics and ablation studies
+
+### Continuous Learning (New!)
+
+7. **Collect feedback**: `08_feedback_evaluation.ipynb` - Interactive feedback collection with ipywidgets interface
+8. **Fine-tune models**: `09_feedback_finetuning.ipynb` - Improve cross-encoder using feedback data
+
+Each notebook includes detailed documentation, acceptance checks, and expected outputs.
 
 ## Data Schema
 
@@ -23,50 +46,329 @@ All configurable paths and thresholds live in `configs/predict_hybrid.yaml`.
 
 ### `data/raw/artifacts.csv`
 - `artifact_id`: Unique ID for each operational artifact.
-- `text`: Artifact text snippet.
-- `evidence_type`: Category describing the artifact source (log, ticket, etc.).
-- `timestamp`: ISO8601 timestamp or similar; coerced to datetime during preprocessing.
-- `partition` (optional): Desired split label (`train`, `dev`, `test`). Missing/blank values are reassigned via 60/20/20 splits with a fixed seed.
-- `gold_controls`: Pipe- or comma-delimited list of authoritative control IDs.
-- `gold_rationale`: Free-text justification for the gold mapping.
+- `text`: Artifact text snippet (primary input for all models).
+- `evidence_type`: Category describing the artifact source (log/config/ticket) - used as feature in Auto-K.
+- `timestamp`: ISO8601 timestamp.
+- `partition` (optional): Split label (`train`, `dev`, `test`). Auto-assigned via 70/15/15 split if missing.
+- `gold_controls`: Semicolon-delimited list of authoritative control IDs (e.g., `AC-7;AU-6`).
+- `gold_rationale`: Free-text justification used to enhance control descriptions with real-world patterns.
+
+### `data/processed/feedback.csv` (Generated by Notebook 08)
+- All columns from artifacts.csv plus:
+- `predicted_controls`: Model predictions (semicolon-delimited).
+- `accept_reject`: Decision based on accuracy threshold (0.5).
+- `accuracy_value`: Jaccard similarity between predicted and gold controls.
 
 ## Notebook Workflow
 
-1. `01_data_prep_and_splits.ipynb` – Validate raw data, enforce partitions, and remove duplicate texts across splits.
-2. `02_build_pairs_hard_negatives.ipynb` – Generate positive/negative control pairs per artifact using lexical retrieval.
-3. `03_train_bi_encoder.ipynb` – Fine-tune a bi-encoder retriever (`multi-qa-mpnet-base-dot-v1`).
-4. `04_train_cross_encoder_and_calibrate.ipynb` – Train a cross-encoder reranker and calibrate probabilities on the dev split.
-5. `05_train_cardinality_autok.ipynb` – Fit an Auto-K classifier that predicts how many controls to emit per artifact.
-6. `06_predict_unified_pipeline.ipynb` – Execute the end-to-end retrieval, reranking, calibration, and cardinality logic for inference.
-7. `07_evaluate_and_ablations.ipynb` – Compute metrics, rerun leakage checks, and document ablation findings.
+### Core Pipeline (Run Once)
+
+1. **`01_data_prep_and_splits.ipynb`** – Data preparation and enhancement
+
+   **Purpose**: Prepares the dataset for training by creating clean train/dev/test splits and enhancing control descriptions with real-world usage patterns from gold rationales.
+
+   **What it does**:
+   - Loads raw artifacts and controls from CSV files
+   - Validates data quality (checks for missing values, duplicates)
+   - Creates stratified 70/15/15 train/dev/test split (~1,093/234/234 artifacts)
+   - Extracts gold rationales per control (groups by control ID)
+   - Generates enhanced control descriptions by appending common usage patterns
+   - Ensures no data leakage between splits
+
+   **Outputs**:
+   - `artifacts_with_split.csv` - Artifacts with partition labels
+   - `controls_enhanced.csv` - Controls with rationale-augmented descriptions
+   - `control_rationales.json` - Rationale index per control
+
+2. **`02_build_pairs_hard_negatives.ipynb`** – Training pair generation
+
+   **Purpose**: Converts artifacts into supervised training pairs (artifact-control combinations) with positive and negative examples for model training.
+
+   **What it does**:
+   - For each artifact, retrieves top-K controls using BM25 lexical search
+   - Labels pairs as positive (1) if control is in gold_controls, negative (0) otherwise
+   - Uses BM25 to find "hard negatives" - controls that are lexically similar but incorrect
+   - Creates balanced datasets with multiple negatives per positive
+   - Saves pairs in JSONL format for efficient loading during training
+
+   **Outputs**:
+   - `train.jsonl` - Training pairs (~60K pairs from 1,093 artifacts)
+   - `dev.jsonl` - Validation pairs (~12K pairs from 234 artifacts)
+   - `test.jsonl` - Test pairs (~12K pairs from 234 artifacts)
+
+3. **`03_train_bi_encoder.ipynb`** – Semantic retrieval model
+
+   **Purpose**: Trains a neural semantic search model that can find relevant controls based on meaning rather than just keyword matching.
+
+   **What it does**:
+   - Fine-tunes `multi-qa-mpnet-base-dot-v1` (a pre-trained Sentence Transformer model)
+   - Uses MultipleNegativesRankingLoss to learn semantic similarity
+   - Training objective: maximize similarity between artifact and gold controls
+   - Encodes entire control catalog into dense vectors (768-dimensional embeddings)
+   - Enables fast semantic retrieval via dot-product similarity
+   - Monitors validation loss and saves best checkpoint
+
+   **Outputs**:
+   - `models/bi_encoder/` - Fine-tuned model weights
+   - `control_embeddings.npy` - Pre-computed embeddings for all 34 controls
+
+4. **`04_train_cross_encoder_and_calibrate.ipynb`** – Reranking + calibration
+
+   **Purpose**: Trains a more accurate reranking model that jointly processes artifact-control pairs and calibrates its confidence scores to be probabilistically meaningful.
+
+   **What it does**:
+   - Trains `cross-encoder/ms-marco-MiniLM-L6-v2` as a binary classifier
+   - Unlike bi-encoder, cross-encoder sees both texts simultaneously (better accuracy, slower)
+   - Fine-tunes for 2 epochs with binary cross-entropy loss
+   - Evaluates on dev set: computes AUC, MAP, and log loss
+   - **Calibrates** raw scores using isotonic regression so probabilities reflect true likelihood
+   - Generates reliability curve showing calibration quality (ECE metric)
+
+   **Outputs**:
+   - `models/cross_encoder/` - Fine-tuned reranker weights
+   - `models/calibration/cross_iso.pkl` - Isotonic regression calibrator
+   - Reliability curve visualization showing before/after calibration
+
+5. **`05_train_cardinality_autok.ipynb`** – Auto-K cardinality prediction
+
+   **Purpose**: Trains a classifier that automatically determines how many controls (1, 2, or 3) should be recommended for each artifact, rather than using a fixed number.
+
+   **What it does**:
+   - Extracts features from cross-encoder scores: top-4 probabilities, score deltas, entropy
+   - Adds evidence type as one-hot features (log/config/ticket have different patterns)
+   - Trains LogisticRegression classifier on ground truth cardinality
+   - Evaluates on dev set: computes accuracy, precision, recall per class
+   - Shows confusion matrix to identify prediction errors
+   - Model learns patterns like: "If top-2 scores are both high → predict K=2"
+
+   **Outputs**:
+   - `models/cardinality/model.pkl` - Trained classifier with scaler and feature names
+
+6. **`06_predict_unified_pipeline.ipynb`** – End-to-end inference
+
+   **Purpose**: Combines all trained models into a complete pipeline that generates control recommendations for new artifacts.
+
+   **What it does**:
+   - **Stage 1 - Hybrid Retrieval**:
+     - BM25 lexical search + bi-encoder semantic search
+     - Fuses scores (0.4 × BM25 + 0.6 × bi-encoder)
+     - Retrieves top-64 candidates
+   - **Stage 2 - Reranking**:
+     - Cross-encoder scores top-64 candidates
+     - Applies calibration to get true probabilities
+     - Blends with retrieval scores (0.7 × cross-encoder + 0.3 × fused)
+     - Keeps top-32 reranked controls
+   - **Stage 3 - Cardinality**:
+     - Auto-K predicts optimal number of controls (1-3)
+     - Applies minimum threshold (0.35) to filter low-confidence predictions
+   - Runs on test set and saves predictions
+
+   **Outputs**:
+   - Predictions CSV with artifact IDs, predicted controls, and confidence scores
+
+7. **`07_evaluate_and_ablations.ipynb`** – Evaluation and analysis
+
+   **Purpose**: Comprehensively evaluates the model's performance using multiple metrics and identifies strengths/weaknesses across different artifact types.
+
+   **What it does**:
+   - Compares predictions against gold labels on test set
+   - **Metrics calculated**:
+     - Top-1 accuracy: Percentage where first prediction is correct
+     - Set F1: Measures precision and recall for multi-control predictions
+     - Recall@K: Coverage of gold controls in top-K predictions
+     - MRR (Mean Reciprocal Rank): Average position of first correct control
+   - **Analysis breakdowns**:
+     - By evidence type (log vs config vs ticket)
+     - By control family (AC, AU, SC, etc.)
+     - By cardinality (1 control vs 2 controls vs 3 controls)
+   - Identifies error patterns for model improvement
+   - Generates visualizations (confusion matrices, score distributions)
+
+   **Outputs**:
+   - Evaluation metrics tables
+   - Performance breakdown reports
+   - Visualizations showing model behavior
+
+### Continuous Learning Loop (Run Iteratively)
+
+8. **`08_feedback_evaluation.ipynb`** – Interactive feedback collection
+
+   **Purpose**: Enables continuous learning by collecting auditor feedback on model predictions through an easy-to-use interface, creating a dataset for model improvement.
+
+   **What it does**:
+   - Runs unified pipeline on feedback data (real-world artifacts from auditors)
+   - Calculates accuracy metrics for existing feedback
+   - **Interactive widget interface (ipywidgets)** for live feedback collection:
+     - **Input fields**: Artifact text, evidence type dropdown, rationale, auditor ID
+     - **"Get Prediction" button**: Runs full pipeline, shows predicted controls with confidence
+     - **Feedback buttons**:
+       - ✓ Correct: Saves prediction as gold standard
+       - ✗ Incorrect: Prompts for correct controls, calculates accuracy
+     - Auto-saves to `feedback.csv` with timestamps
+   - Analyzes performance by evidence type to identify weak areas
+   - Shows current feedback statistics (accept/reject rates, accuracy distribution)
+
+   **Outputs**:
+   - `data/processed/feedback.csv` - Predictions, gold controls, accuracy scores
+   - Performance summary by evidence type (identifies ticket artifacts need improvement)
+
+9. **`09_feedback_finetuning.ipynb`** – Model improvement from feedback
+
+   **Purpose**: Uses collected feedback to fine-tune the cross-encoder model, specifically targeting weak areas (like ticket artifacts) while maintaining performance on areas that already work well.
+
+   **What it does**:
+   - **Analyzes feedback distribution**:
+     - Poor (accuracy < 0.5): 16 artifacts - Complete failures
+     - Partial (0.5 ≤ accuracy < 1.0): 64 artifacts - Near misses
+     - Perfect (accuracy = 1.0): 270 artifacts - Already correct
+   - **Stratified training pair generation**:
+     - Poor: 3x oversampling (emphasize failures) → ~1,600 pairs
+     - Partial: 2x oversampling (moderate emphasis) → ~4,350 pairs
+     - Perfect: 0.5x downsampling (prevent overfitting to easy cases) → ~1,600 pairs
+     - Total: ~7,600 training pairs focused on errors
+   - **Fine-tuning strategy**:
+     - Loads existing cross-encoder (not base model) to preserve learned patterns
+     - Conservative learning rate (1e-5) to avoid catastrophic forgetting
+     - Trains for 1-2 epochs with early stopping
+     - Validates on original dev set (not feedback) to detect overfitting
+   - **Recalibration**: Fits new isotonic calibrator on dev set
+   - **Evaluation**: Compares v1 vs v2 on all test sets
+     - Measures improvement on ticket artifacts (target: 62% → 75-85%)
+     - Ensures no degradation on log/config artifacts
+   - Generates comparison visualizations (before/after charts)
+
+   **Outputs**:
+   - `models/cross_encoder_v2/` - Fine-tuned model
+   - `models/calibration_v2/cross_iso.pkl` - Recalibrated probabilities
+   - `data/processed/pairs/feedback_train.jsonl` - Stratified training pairs
+   - Comparison report showing v1 vs v2 improvement by evidence type
 
 ## Directory Layout
 
 ```
 crs/
-├─ notebooks/                  # Planning notebooks (no executable code committed)
+├─ notebooks/                           # 9 Jupyter notebooks (01-09)
+│  ├─ 01_data_prep_and_splits.ipynb     # Data preprocessing + 70/15/15 split
+│  ├─ 02_build_pairs_hard_negatives.ipynb
+│  ├─ 03_train_bi_encoder.ipynb
+│  ├─ 04_train_cross_encoder_and_calibrate.ipynb
+│  ├─ 05_train_cardinality_autok.ipynb
+│  ├─ 06_predict_unified_pipeline.ipynb
+│  ├─ 07_evaluate_and_ablations.ipynb
+│  ├─ 08_feedback_evaluation.ipynb      # NEW: Interactive feedback with ipywidgets
+│  └─ 09_feedback_finetuning.ipynb      # NEW: Fine-tune from feedback
 ├─ data/
-│  ├─ raw/                     # Source CSVs from NIST catalog and labeled artifacts
-│  └─ processed/               # Leak-free artifact splits and pair data
-├─ models/                     # Saved retrievers, rerankers, calibration, Auto-K assets
-├─ outputs/predictions/        # Unified pipeline predictions (dev/test)
-├─ eval/tables/                # Evaluation tables written by Notebook 07
-├─ configs/                    # Runtime configuration (`predict_hybrid.yaml`)
-├─ README.md                   # This guide
-└─ LICENSE                     # Repository license
+│  ├─ raw/                              # Source data
+│  │  ├─ controls.csv                   # NIST SP 800-53 control catalog
+│  │  ├─ artifacts.csv                  # Labeled operational artifacts
+│  │  └─ round_feedback_full.csv        # Auditor feedback data
+│  └─ processed/                        # Generated artifacts
+│     ├─ artifacts_with_split.csv       # Artifacts with train/dev/test labels
+│     ├─ controls_enhanced.csv          # Controls + rationale patterns
+│     ├─ control_rationales.json        # Rationale index per control
+│     ├─ feedback.csv                   # Predictions + accuracy metrics
+│     └─ pairs/                         # Training pairs
+│        ├─ train.jsonl
+│        ├─ dev.jsonl
+│        ├─ test.jsonl
+│        └─ feedback_train.jsonl        # Stratified feedback pairs
+├─ models/                              # Trained models
+│  ├─ bm25/                             # BM25 index
+│  ├─ bi_encoder/                       # Semantic retrieval (v1)
+│  ├─ cross_encoder/                    # Reranker (v1)
+│  ├─ cross_encoder_v2/                 # Fine-tuned reranker (NEW)
+│  ├─ calibration/                      # Isotonic calibrator (v1)
+│  ├─ calibration_v2/                   # Recalibrated (NEW)
+│  └─ cardinality/                      # Auto-K classifier
+├─ requirements.txt                     # Python dependencies
+├─ README.md                            # This guide
+└─ LICENSE
 ```
 
-## Configuration Highlights (`configs/predict_hybrid.yaml`)
-- Paths for raw/processed data, trained models, and evaluation outputs.
-- Retrieval depths for BM25 and bi-encoder candidates, fusion weights, and rerank cutoffs.
-- Cross-encoder calibration threshold and Auto-K enablement.
+## Pipeline Architecture
+
+### Stage 1: Hybrid Retrieval
+- **BM25** (lexical): Token-based matching → sparse scores
+- **Bi-encoder** (semantic): Dot-product similarity → dense scores
+- **Fusion**: 0.4 × BM25 + 0.6 × bi-encoder → top-64 candidates
+
+### Stage 2: Cross-Encoder Reranking
+- **Model**: `cross-encoder/ms-marco-MiniLM-L6-v2` fine-tuned on domain pairs
+- **Calibration**: Isotonic regression on dev set probabilities
+- **Output**: Top-32 candidates with calibrated probabilities
+
+### Stage 3: Auto-K Cardinality Prediction
+- **Features**: Top-4 scores, score deltas, entropy, evidence type
+- **Model**: Logistic regression classifier
+- **Output**: K ∈ {1, 2, 3} controls per artifact
+
+### Stage 4: Final Selection
+- Select top-K controls above confidence threshold (0.35)
+- Fallback to top-1 if no controls pass threshold
+
+## Performance Metrics
+
+### Test Set (Notebook 07)
+- **Top-1 Accuracy**: 86.6%
+- **Set F1**: 80.7%
+- **Recall@3**: 94.2%
+
+### Feedback Set (Notebook 08)
+- **Mean Accuracy**: 87.2%
+- **Log artifacts**: 95.5%
+- **Config artifacts**: 95.3%
+- **Ticket artifacts**: 62.0% (target for improvement via Notebook 09)
+
+### Fine-tuned Model (Notebook 09 - Expected)
+- **Ticket artifacts**: 75-85% (target after fine-tuning)
+- **Overall**: 90%+ mean accuracy
+
+## Continuous Learning Workflow
+
+1. **Collect feedback** (Notebook 08):
+   - Auditors review predictions via interactive interface
+   - Mark correct/incorrect, provide gold labels
+   - Data saved to `feedback.csv`
+
+2. **Analyze performance** (Notebook 08):
+   - Identify weak areas (e.g., ticket artifacts at 62%)
+   - Review by evidence type and accuracy category
+
+3. **Fine-tune models** (Notebook 09):
+   - Generate stratified training pairs emphasizing errors
+   - Fine-tune cross-encoder with conservative learning rate
+   - Recalibrate on dev set
+   - Evaluate improvement (v1 → v2)
+
+4. **Deploy v2 models**:
+   - Replace `models/cross_encoder/` with `models/cross_encoder_v2/`
+   - Replace `models/calibration/` with `models/calibration_v2/`
+   - Iterate as more feedback is collected
+
+## Dependencies
+
+Key libraries (see `requirements.txt` for full list):
+- `sentence-transformers` - Bi-encoder and cross-encoder models
+- `rank-bm25` - BM25 lexical retrieval
+- `scikit-learn` - Auto-K classifier and isotonic calibration
+- `torch` - Deep learning backend
+- `ipywidgets` - Interactive feedback interface
+- `pandas`, `numpy` - Data processing
 
 ## OSCAL Alignment
 
-The pipeline is designed so that `outputs/predictions/*.csv` can be transformed into OSCAL assessment-results assets. When ready, add an `oscal/` folder with a README describing the JSON serialization that maps predictions to the OSCAL assessment-results model.
+The pipeline outputs can be transformed into OSCAL assessment-results artifacts. The `predicted_controls` field maps directly to OSCAL control observations. Future work may include an `oscal/` folder with JSON serialization utilities.
 
-## Next Steps
+## Citation
 
-- Execute the notebooks to materialize processed data, trained models, and evaluation artifacts.
-- Integrate automated tests or scripts (e.g., unit tests around feature extraction) once the core pipeline is coded.
-- Extend the repository with scripts or CLIs mirroring the notebook logic for production deployment.
+If you use this system in your research or production environment, please cite:
+
+```
+Control Recommendation System (CRS)
+NIST SP 800-53 Rev. 5 Control Mapping via Hybrid Retrieval and Continuous Learning
+https://github.com/[your-org]/crs
+```
+
+## License
+
+See `LICENSE` file for details.
