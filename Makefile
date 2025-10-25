@@ -4,32 +4,42 @@
 .PHONY: index-hybrid recommend-hybrid eval-hybrid
 .PHONY: all-tfidf all-embeddings all-hybrid compare
 
-VENV=. .venv/bin/activate
+PYTHON_BIN:=$(shell command -v python 2>/dev/null || command -v python3 2>/dev/null)
+ifeq ($(PYTHON_BIN),)
+$(error Neither python nor python3 found on PATH. Please install Python 3.)
+endif
+
+VENV_DIR=.venv
+PYTHON=$(VENV_DIR)/bin/python
 CONFIG_TFIDF=configs/tfidf.yaml
 CONFIG_EMBEDDINGS=configs/embeddings.yaml
 CONFIG_HYBRID=configs/hybrid.yaml
 CONFIG_EVAL=configs/eval.yaml
 
-setup:
-	python -m venv .venv && ${VENV} && pip install -U pip && pip install -e .
+$(PYTHON):
+	$(PYTHON_BIN) -m venv $(VENV_DIR)
+	$(PYTHON) -m pip install -U pip
+	$(PYTHON) -m pip install -e .
+
+setup: $(PYTHON)
 	@echo "Environment ready. Run: make all-tfidf or make all-embeddings or make compare"
 
-format:
-	pre-commit run --all-files || true
+format: $(PYTHON)
+	$(PYTHON) -m pre_commit run --all-files || true
 
-test:
-	${VENV} && pytest -q
+test: $(PYTHON)
+	$(PYTHON) -m pytest -q
 
 # TF-IDF pipeline
-index-tfidf:
-	${VENV} && python -m src.cli.build_index --config ${CONFIG_TFIDF}
+index-tfidf: $(PYTHON)
+	$(PYTHON) -m src.cli.build_index --config ${CONFIG_TFIDF}
 
-recommend-tfidf:
-	${VENV} && python -m src.cli.recommend --config ${CONFIG_TFIDF} \
+recommend-tfidf: $(PYTHON)
+	$(PYTHON) -m src.cli.recommend --config ${CONFIG_TFIDF} \
 	  --in data/raw/artifacts.csv --out outputs/predictions/tfidf/test.csv --split test
 
-eval-tfidf:
-	${VENV} && python -m src.cli.evaluate --config ${CONFIG_EVAL} \
+eval-tfidf: $(PYTHON)
+	$(PYTHON) -m src.cli.evaluate --config ${CONFIG_EVAL} \
 	  --pred outputs/predictions/tfidf/test.csv --set_metrics
 	@if [ -f eval/tables/metrics.csv ]; then \
 	  mv eval/tables/metrics.csv eval/tables/metrics_tfidf.csv; \
@@ -40,15 +50,15 @@ all-tfidf: index-tfidf recommend-tfidf eval-tfidf
 	@echo "✓ TF-IDF pipeline complete"
 
 # Embeddings pipeline
-index-embeddings:
-	${VENV} && python -m src.cli.build_index --config ${CONFIG_EMBEDDINGS}
+index-embeddings: $(PYTHON)
+	$(PYTHON) -m src.cli.build_index --config ${CONFIG_EMBEDDINGS}
 
-recommend-embeddings:
-	${VENV} && python -m src.cli.recommend --config ${CONFIG_EMBEDDINGS} \
+recommend-embeddings: $(PYTHON)
+	$(PYTHON) -m src.cli.recommend --config ${CONFIG_EMBEDDINGS} \
 	  --in data/raw/artifacts.csv --out outputs/predictions/embeddings/test.csv --split test
 
-eval-embeddings:
-	${VENV} && python -m src.cli.evaluate --config ${CONFIG_EVAL} \
+eval-embeddings: $(PYTHON)
+	$(PYTHON) -m src.cli.evaluate --config ${CONFIG_EVAL} \
 	  --pred outputs/predictions/embeddings/test.csv --set_metrics
 	@if [ -f eval/tables/metrics.csv ]; then \
 	  mv eval/tables/metrics.csv eval/tables/metrics_embeddings.csv; \
@@ -59,15 +69,15 @@ all-embeddings: index-embeddings recommend-embeddings eval-embeddings
 	@echo "✓ Embeddings pipeline complete"
 
 # Hybrid pipeline
-index-hybrid:
-	${VENV} && python -m src.cli.build_index --config ${CONFIG_HYBRID}
+index-hybrid: $(PYTHON)
+	$(PYTHON) -m src.cli.build_index --config ${CONFIG_HYBRID}
 
-recommend-hybrid:
-	${VENV} && python -m src.cli.recommend --config ${CONFIG_HYBRID} \
+recommend-hybrid: $(PYTHON)
+	$(PYTHON) -m src.cli.recommend --config ${CONFIG_HYBRID} \
 	  --in data/raw/artifacts.csv --out outputs/predictions/hybrid/test.csv --split test
 
-eval-hybrid:
-	${VENV} && python -m src.cli.evaluate --config ${CONFIG_EVAL} \
+eval-hybrid: $(PYTHON)
+	$(PYTHON) -m src.cli.evaluate --config ${CONFIG_EVAL} \
 	  --pred outputs/predictions/hybrid/test.csv --set_metrics
 	@if [ -f eval/tables/metrics.csv ]; then \
 	  mv eval/tables/metrics.csv eval/tables/metrics_hybrid.csv; \
