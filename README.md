@@ -2,7 +2,9 @@
 
 ### **We originally worked on an analytical research project, as you can see in this repository; https://github.com/Pradyum-1712/AI-in-Cybersecurity-Auditing-and-Compliance-Monitoring. We aimed to complete about 50% of the implementation of that analytical paper by October 19. Unfortunately, we didn’t see your email recommending a problem–solution paper until October 20, which is when we decided to change our idea and start working on that instead.**
 
-### **This repository was created for the new idea, and here you’ll find the full implementation. However, if you’d like to see what we attempted with the analytical paper (even though we didn’t finish it), you can check it out in the link above.**
+### **This repository was created for the new idea, and here you’ll find the full implementation. However, if you’d like to see what we attempted with the analytical paper (even though we didn’t finish it), you can check it out in the link above. NB: The language models were too big to push to the repository, so we uploaded it on Google Drive.**
+https://drive.google.com/drive/folders/1-rCXrmqAEQsmQBlxcRG4FAZykHRAUKEd?usp=sharing
+
 
 This repository implements a complete machine learning pipeline for mapping operational artifacts (logs, configuration diffs, tickets) to NIST SP 800-53 Rev. 5 controls. The system features hybrid retrieval, cross-encoder reranking, calibrated probabilities, auto-K cardinality prediction, and continuous learning from auditor feedback.
 
