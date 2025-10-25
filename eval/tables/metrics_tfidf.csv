@@ -1,6 +1,0 @@
-metric,value
-top1_accuracy,0.875
-avg_pred_length,1.2541666666666667
-set_precision,0.8541666666666666
-set_recall,0.5645833333333333
-set_f1,0.6798213411649535

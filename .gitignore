@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 .venv/
+venv
 .env
 
 # Jupyter
@@ -11,3 +12,17 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Models (large files)
+*.npy
+*.pkl
+*.bin
+*.pt
+*.pth
+models/*/
+
+
+# Virtual environment
+venv/
+.venv/
+refactor.ipynb

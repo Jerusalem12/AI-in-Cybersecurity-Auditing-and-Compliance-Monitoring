@@ -1,0 +1,44 @@
+random_seed: 42
+
+data:
+  raw_controls: data/raw/controls.csv
+  raw_artifacts: data/raw/artifacts.csv
+  processed_artifacts: data/processed/artifacts_with_split.csv
+  pairs_dir: data/processed/pairs
+
+models:
+  bm25_cache: models/bm25
+  bi_encoder: models/bi_encoder
+  cross_encoder: models/cross_encoder
+  calibration: models/calibration/cross_iso.pkl
+  cardinality: models/cardinality/model.pkl
+  feature_spec: models/cardinality/feature_spec.json
+
+retrieval:
+  lexical:
+    top_k: 64
+  semantic:
+    top_k: 64
+  fusion:
+    method: weighted_sum
+    weights:
+      bm25: 0.4
+      bi_encoder: 0.6
+  rerank:
+    top_k: 32
+
+calibration:
+  threshold: 0.35
+  apply_isotonic: true
+
+cardinality:
+  use_auto_k: true
+  max_predictions: 3
+
+outputs:
+  predictions_dir: outputs/predictions
+  test_file: outputs/predictions/test.csv
+  dev_file: outputs/predictions/dev.csv
+
+evaluation:
+  metrics_table: eval/tables/metrics.csv
