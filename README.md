@@ -284,6 +284,7 @@ crs/
 │  └─ cardinality/                      # Auto-K classifier
 ├─ requirements.txt                     # Python dependencies
 ├─ README.md                            # This guide
+├─ .gitignore                           # Git ignore
 └─ LICENSE
 ```
 
